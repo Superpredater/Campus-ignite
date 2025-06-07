@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gopalan College Memories</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding-top: 70px;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(13, 12, 12, 0.8);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+
+    .navbar {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+      position: relative;
+    }
+
+    .navbar-logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
+      text-shadow: 1px 1px 2px #000;
+      z-index: 1001;
+    }
+
+    .navbar-links {
+      display: flex;
+      gap: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .navbar-links a {
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+      font-size: 0.95rem;
+      transition: color 0.3s;
+      padding: 8px 12px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .navbar-links a:hover {
+      color: #ffe082;
+      background: rgba(255, 224, 130, 0.1);
+    }
+
+    .mobile-menu-toggle {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      padding: 5px;
+      z-index: 1001;
+    }
+
+    .mobile-menu-toggle span {
+      width: 25px;
+      height: 3px;
+      background: white;
+      margin: 3px 0;
+      transition: 0.3s;
+      border-radius: 2px;
+    }
+
+    .mobile-menu-toggle.active span:nth-child(1) {
+      transform: rotate(-45deg) translate(-5px, 6px);
+    }
+
+    .mobile-menu-toggle.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .mobile-menu-toggle.active span:nth-child(3) {
+      transform: rotate(45deg) translate(-5px, -6px);
+    }
+
+    .memories-container {
+      max-width: 1200px;
+      margin: 20px auto;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: bold;
+      color: #2c3e50;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      font-size: clamp(1rem, 3vw, 1.2rem);
+      color: #666;
+      margin-bottom: 30px;
+      font-style: italic;
+      padding: 0 10px;
+    }
+
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .portfolio-item {
+      position: relative;
+      height: 200px;
+      border-radius: 15px;
+      overflow: hidden;
+      text-decoration: none;
+      transition: all 0.4s ease;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .portfolio-item:hover,
+    .portfolio-item:active {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+    }
+
+    .portfolio-item:nth-child(odd) {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .portfolio-item:nth-child(3n) {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+
+    .portfolio-item:nth-child(4n) {
+      background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    }
+
+    .portfolio-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .portfolio-item:hover .portfolio-overlay,
+    .portfolio-item:active .portfolio-overlay {
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .portfolio-overlay h3 {
+      color: white;
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      font-weight: bold;
+      text-align: center;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      line-height: 1.3;
+      word-wrap: break-word;
+      hyphens: auto;
+    }
+
+    .college-header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+      border-radius: 15px;
+      border: 2px solid rgba(102, 126, 234, 0.2);
+    }
+
+    .college-logo {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 15px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .memory-stats {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 30px 0;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 15px 10px;
+      background: rgba(102, 126, 234, 0.1);
+      border-radius: 10px;
+      min-width: 90px;
+      flex: 1;
+      max-width: 150px;
+    }
+
+    .stat-number {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: bold;
+      color: #667eea;
+    }
+
+    .stat-label {
+      color: #666;
+      font-size: clamp(0.8rem, 2vw, 0.9rem);
+      margin-top: 5px;
+    }
+
+    .year-dropdown-container {
+      text-align: center;
+      margin: 25px 0;
+    }
+
+    .year-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: clamp(1rem, 2.5vw, 1.1rem);
+      font-weight: bold;
+      color: #667eea;
+    }
+
+    .dropdown-select {
+      appearance: none;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 12px 35px 12px 15px;
+      border-radius: 25px;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+      min-width: 160px;
+      max-width: 90vw;
+    }
+
+    .dropdown-arrow {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: white;
+      font-size: 1rem;
+    }
+
+    /* Mobile-specific styles */
+    @media (max-width: 768px) {
+      body {
+        padding-top: 60px;
+      }
+
+      .mobile-menu-toggle {
+        display: flex;
+      }
+
+      .navbar-links {
+        position: fixed;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        height: calc(100vh - 60px);
+        background: rgba(13, 12, 12, 0.95);
+        backdrop-filter: blur(10px);
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 0;
+        padding-top: 50px;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+
+      .navbar-links.active {
+        transform: translateX(0);
+      }
+
+      .navbar-links a {
+        font-size: 1.2rem;
+        padding: 15px 20px;
+        width: 80%;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .memories-container {
+        margin: 10px;
+        padding: 15px;
+        border-radius: 15px;
+      }
+
+      .portfolio-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+
+      .portfolio-item {
+        height: 150px;
+        min-height: 120px;
+      }
+
+      .college-header {
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+
+      .college-logo {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+      }
+
+      .memory-stats {
+        gap: 10px;
+        margin: 20px 0;
+      }
+
+      .stat-item {
+        padding: 12px 8px;
+        min-width: 80px;
+      }
+
+      .year-dropdown-container {
+        margin: 20px 0;
+      }
+
+      .dropdown-select {
+        min-width: 140px;
+        padding: 10px 30px 10px 12px;
+      }
+
+      .dropdown-arrow {
+        right: 10px;
+      }
+    }
+
+    /* Extra small devices */
+    @media (max-width: 480px) {
+      .navbar {
+        padding: 10px 15px;
+      }
+
+      .navbar-logo {
+        font-size: 1.3rem;
+      }
+
+      .memories-container {
+        margin: 5px;
+        padding: 10px;
+      }
+
+      .portfolio-item {
+        height: 120px;
+      }
+
+      .portfolio-overlay {
+        padding: 10px;
+      }
+
+      .memory-stats {
+        gap: 8px;
+      }
+
+      .stat-item {
+        padding: 10px 6px;
+        min-width: 70px;
+      }
+    }
+
+    /* Large screens */
+    @media (min-width: 1200px) {
+      .memories-container {
+        padding: 40px;
+      }
+
+      .portfolio-grid {
+        gap: 30px;
+      }
+
+      .portfolio-item {
+        height: 250px;
+      }
+
+      .college-header {
+        padding: 30px;
+      }
+
+      .college-logo {
+        width: 80px;
+        height: 80px;
+        font-size: 2rem;
+      }
+    }
+
+    /* Landscape orientation on mobile */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .navbar-links {
+        height: calc(100vh - 50px);
+        padding-top: 20px;
+      }
+
+      .navbar-links a {
+        padding: 10px 20px;
+      }
+    }
+
+    /* High DPI displays */
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+      .portfolio-item {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    /* Focus styles for accessibility */
+    .dropdown-select:focus,
+    .navbar-links a:focus,
+    .portfolio-item:focus {
+      outline: 2px solid #ffe082;
+      outline-offset: 2px;
+    }
+
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Loading animation for images */
+    .portfolio-item {
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="navbar">
+      <div class="navbar-logo">Campus ignite</div>
+      <div class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div class="navbar-links" id="navbarLinks">
+        <a href="index.html" onclick="closeMobileMenu()">Home</a>
+        <a href="index.html" onclick="closeMobileMenu()">Activities</a>
+        <a href="index.html" onclick="closeMobileMenu()">Portfolio</a>
+        <a href="index.html" onclick="closeMobileMenu()">About</a>
+        <a href="index.html" onclick="closeMobileMenu()">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="memories-container">
+    <div class="college-header">
+      <div class="college-logo">GCEM</div>
+      <h1 class="section-title">Gopalan College Memories</h1>
+      <p class="section-subtitle">Capturing the vibrant spirit and unforgettable moments of campus life</p>
+    </div>
+
+    <div class="year-dropdown-container">
+      <div class="year-dropdown">
+        <label class="dropdown-label" for="academicYear">Select Academic Year</label>
+        <select class="dropdown-select" id="academicYear" onchange="changeAcademicYear(this.value)">
+          <option value="2024-25" selected>2024-25</option>
+          <option value="2025-26">2025-26</option>
+          <option value="2026-27">2026-27</option>
+        </select>
+        <div class="dropdown-arrow">▼</div>
+      </div>
+    </div>
+
+    <div class="memory-stats">
+      <div class="stat-item">
+        <div class="stat-number" id="eventCount">8</div>
+        <div class="stat-label">Events Captured</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" id="currentYear">2024-25</div>
+        <div class="stat-label">Academic Year</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">∞</div>
+        <div class="stat-label">Memories Made</div>
+      </div>
+    </div>
+
+    <section class="portfolio" id="portfolio">
+      <div class="portfolio-grid" id="portfolioGrid">
+        <!-- JS will inject cards here -->
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const academicYearData = {
+      '2024-25': {
+        eventCount: 8,
+        events: [
+          { title: 'Karnataka Rajyotsava Celebration 2024-25', link: '#' },
+          { title: 'Freshers Day 2024-25 (CSE)', link: 'https://drive.google.com/drive/folders/1ezZNEHXnXHNTV8uJalhGU7wdJl1Rhwr2?usp=sharing' },
+          { title: 'College Fest Estralis 2024-25', link: 'https://drive.google.com/drive/folders/1O8OvIcJwq0-96iXJUmAX9Mi9ZRMLJFtB?usp=sharing' },
+          { title: 'Prize Distribution – 2nd Sem Induction Program', link: 'https://drive.google.com/drive/folders/1jNthZem13EUKdJkxRbPk2W-lnLHI9j3L?usp=sharing' },
+          { title: 'Open House Event 2025', link: 'https://drive.google.com/drive/folders/1r5GDXffJhkqbCbEZd3FcxYaeW0x8yxV3' },
+          { title: 'Cyber Hygiene Event', link: 'https://drive.google.com/drive/folders/1kIKn6LOzuQIJ7W5Esp0C1GLJBD8xwnBL?usp=sharing' },
+          { title: 'Cultural Fest (2nd Sem Induction Program)', link: 'https://drive.google.com/drive/folders/1QUEkcMAh1xkfbajuQS1s1B7-GgqxJ186?usp=sharing' },
+          { title: '1st Sem Mini Project 2024-25 (CSE Department)', link: 'https://drive.google.com/drive/folders/157ANBQ4sQWe-9lFwScswk240HPjVtP5D?usp=sharing' }
+        ]
+      },
+      '2025-26': {
+        eventCount: 0,
+        events: [
+          { title: 'No events added yet for 2025-26', link: '#' }
+        ]
+      },
+      '2026-27': {
+        eventCount: 0,
+        events: [
+          { title: 'No events added yet for 2026-27', link: '#' }
+        ]
+      }
+    };
+
+    function toggleMobileMenu() {
+      const navbarLinks = document.getElementById('navbarLinks');
+      const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+      
+      navbarLinks.classList.toggle('active');
+      mobileMenuToggle.classList.toggle('active');
+    }
+
+    function closeMobileMenu() {
+      const navbarLinks = document.getElementById('navbarLinks');
+      const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+      
+      navbarLinks.classList.remove('active');
+      mobileMenuToggle.classList.remove('active');
+    }
+
+    function changeAcademicYear(selectedYear) {
+      const data = academicYearData[selectedYear];
+      document.getElementById('eventCount').textContent = data.eventCount;
+      document.getElementById('currentYear').textContent = selectedYear;
+      const grid = document.getElementById('portfolioGrid');
+      grid.innerHTML = '';
+      
+      data.events.forEach((event, index) => {
+        const item = document.createElement('a');
+        item.href = event.link;
+        item.target = '_blank';
+        item.className = 'portfolio-item';
+        item.style.animationDelay = `${index * 0.1}s`;
+        item.innerHTML = `<div class="portfolio-overlay"><h3>${event.title}</h3></div>`;
+        grid.appendChild(item);
+      });
+    }
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+      const navbar = document.querySelector('.navbar');
+      const navbarLinks = document.getElementById('navbarLinks');
+      const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+      
+      if (!navbar.contains(event.target) && navbarLinks.classList.contains('active')) {
+        navbarLinks.classList.remove('active');
+        mobileMenuToggle.classList.remove('active');
+      }
+    });
+
+    // Handle window resize
+    window.addEventListener('resize', function() {
+      const navbarLinks = document.getElementById('navbarLinks');
+      const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+      
+      if (window.innerWidth > 768) {
+        navbarLinks.classList.remove('active');
+        mobileMenuToggle.classList.remove('active');
+      }
+    });
+
+    // Initialize with default year
+    changeAcademicYear("2024-25");
+
+    // Add touch support for portfolio items
+    document.addEventListener('DOMContentLoaded', function() {
+      const portfolioItems = document.querySelectorAll('.portfolio-item');
+      portfolioItems.forEach(item => {
+        item.addEventListener('touchstart', function() {
+          this.style.transform = 'translateY(-8px) scale(1.02)';
+        });
+        
+        item.addEventListener('touchend', function() {
+          setTimeout(() => {
+            this.style.transform = '';
+          }, 200);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
